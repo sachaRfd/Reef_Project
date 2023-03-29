@@ -5,7 +5,7 @@ import numpy as np
 
 class Create_Image:
 
-    def __init__(self, path):
+    def __init__(self, path: str) -> None:
         self.path_to_image = path
         self.files = os.listdir(self.path_to_image)
         # filter for bands (assuming they end in '.jp2')
@@ -16,7 +16,7 @@ class Create_Image:
             self.test_path, driver='JP2OpenJPEG')  # Open the file
 
     # create 3 count Tiff File:
-    def RGB_tiff(self, root_path, file_name):
+    def RGB_tiff(self, root_path: str, file_name: str) -> None:
         # Create Tiff File
         trueColor = rasterio.open(root_path + file_name + ".tiff", 'w', driver='Gtiff',  # noqa
                                   width=self.test_band.width, height=self.test_band.height,  # noqa
@@ -43,7 +43,7 @@ class Create_Image:
 
     # create 4 count Tiff File:
 
-    def TIC_RGB_tiff(self, root_path, file_name):
+    def TIC_RGB_tiff(self, root_path: str, file_name: str) -> None:
         # Create Tiff File
         trueColor = rasterio.open(root_path + file_name + ".tiff", 'w', driver='Gtiff',  # noqa
                                   width=self.test_band.width, height=self.test_band.height,  # noqa
@@ -72,7 +72,7 @@ class Create_Image:
                 print("TIC DONE")
         trueColor.close()
 
-    def NDVI_Index(self, root_path, file_name):
+    def NDVI_Index(self, root_path: str, file_name: str) -> None:
         """
         Normalised Difference Vegetation Index:
         (B8 - RED) / (B8 + RED)
@@ -126,7 +126,7 @@ class Create_Image:
         trueColor.close()  # Close file
         print(f"Min is: {NDVI_index.min()}, max is : {NDVI_index.max()}")
 
-    def MNDWI_Index(self, root_path, file_name):
+    def MNDWI_Index(self, root_path: str, file_name: str) -> None:
         """
         Only works if data includes the B9 band
 

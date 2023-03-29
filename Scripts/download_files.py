@@ -11,11 +11,11 @@ class Get_Data:
                                'https://apihub.copernicus.eu/apihub')
 
     # Funtion that takes Dictionary with Long/Lat and returns the shapely point
-    def makePoints(self, point):
+    def makePoints(self, point) -> shapely.geometry.Point:
         p = (point["Longitude_Degrees"], point["Latitude_Degrees"])
         return shapely.geometry.Point(p[0], p[1])
 
-    def download_data(self, point):
+    def download_data(self, point: shapely.geometry.Point) -> None:
         # self.footprint = shapely.geometry.Point(72.1378, -6.2779)
         self.footprint = point
         self.products = self.api.query(self.footprint,
@@ -23,6 +23,8 @@ class Get_Data:
                                        cloudcoverpercentage=(0, 30))
         self.products_df = self.api.to_dataframe(
             self.products)  # Put into Dataframe
+        # Sort by date and cloudcoveragepercentage
+        # self.products_df = self.products_df.sort_values(by=['cloudcoverpercentage'])  # noqa
 
         print(f"There are {self.products_df.shape[0]} products currently")
         print()
