@@ -15,6 +15,13 @@ class read_reefs:
         self.reef_number = reef_number
 
     def read_each_reef(self) -> None:
+        """
+        Reads the reef shapefile and the tiff file and creates a new tiff file for each reef in the tiff file.  # noqa        
+
+        Returns
+        -------
+        None
+        """
         # Reads the RGB image
         with rasterio.open(self.file_location) as src:
             # Get the bounding box of the tiff file
