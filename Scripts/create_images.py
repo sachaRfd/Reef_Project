@@ -17,6 +17,20 @@ class Create_Image:
 
     # create 3 count Tiff File:
     def RGB_tiff(self, root_path: str, file_name: str) -> None:
+        """
+        Creates a RGB tiff file from the JP2 files in the path_to_image folder.
+
+        Parameters
+        ----------
+        root_path : str
+            The path to the folder where the tiff file will be stored.
+        file_name : str
+            The name of the tiff file.
+
+        Returns
+        -------
+        None.
+        """
         # Create Tiff File
         trueColor = rasterio.open(root_path + file_name + ".tiff", 'w', driver='Gtiff',  # noqa
                                   width=self.test_band.width, height=self.test_band.height,  # noqa
@@ -44,6 +58,20 @@ class Create_Image:
     # create 4 count Tiff File:
 
     def TIC_RGB_tiff(self, root_path: str, file_name: str) -> None:
+        """
+        Creates a TIC RGB tiff file from the JP2 files in the path_to_image folder.  # noqa
+
+        Parameters
+        ----------
+        root_path : str
+            The path to the folder where the tiff file will be stored.
+        file_name : str
+            The name of the tiff file.
+
+        Returns
+        -------
+        None.
+        """
         # Create Tiff File
         trueColor = rasterio.open(root_path + file_name + ".tiff", 'w', driver='Gtiff',  # noqa
                                   width=self.test_band.width, height=self.test_band.height,  # noqa
@@ -74,6 +102,19 @@ class Create_Image:
 
     def NDVI_Index(self, root_path: str, file_name: str) -> None:
         """
+        Creates a NDVI tiff file from the JP2 files in the path_to_image folder.  # noqa
+
+        Parameters
+        ----------
+        root_path : str
+            The path to the folder where the tiff file will be stored.
+        file_name : str
+            The name of the tiff file.
+
+        Returns
+        -------
+        None.
+
         Normalised Difference Vegetation Index:
         (B8 - RED) / (B8 + RED)
         """
@@ -128,6 +169,20 @@ class Create_Image:
 
     def MNDWI_Index(self, root_path: str, file_name: str) -> None:
         """
+        Creates a MNDWI tiff file from the JP2 files in the path_to_image folder.
+
+        Parameters
+        ----------
+        root_path : str
+            The path to the folder where the tiff file will be stored.
+        file_name : str
+            The name of the tiff file.
+
+        Returns
+        -------
+        None.
+
+
         Only works if data includes the B9 band
 
         Modified Normalised Difference Water Index (MNDWI)  --> Check where water and land meet  # noqa

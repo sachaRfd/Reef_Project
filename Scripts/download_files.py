@@ -12,10 +12,35 @@ class Get_Data:
 
     # Funtion that takes Dictionary with Long/Lat and returns the shapely point
     def makePoints(self, point) -> shapely.geometry.Point:
+        """
+        Takes a dictionary with the longitude and latitude and returns a shapely point  # noqa
+
+        Parameters
+        ----------
+        point : dict
+            The dictionary with the longitude and latitude
+
+        Returns
+        -------
+        shapely.geometry.Point
+            The point
+        """
         p = (point["Longitude_Degrees"], point["Latitude_Degrees"])
         return shapely.geometry.Point(p[0], p[1])
 
     def download_data(self, point: shapely.geometry.Point) -> None:
+        """
+        Downloads the data from the Sentinel API
+
+        Parameters
+        ----------
+        point : shapely.geometry.Point
+            The point to download the data from
+
+        Returns
+        -------
+        None
+        """
         # self.footprint = shapely.geometry.Point(72.1378, -6.2779)
         self.footprint = point
         self.products = self.api.query(self.footprint,
