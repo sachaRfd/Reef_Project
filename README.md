@@ -12,5 +12,10 @@
 
 ## Basic Notebooks:
 - Super Simple implementations of the models 
-    - For now I am converting from tensorflow to pytorch for better memory managment and testing
+    - For now I am converting from tensorflow to pytorch for better memory managment and testing  --> Not great
     - Check the PYTORCH Notebooks for notes and next steps
+    
+### Basic Reef notebook:
+- Worked fine on small reefs of size 26x26  --> but size of the dataset was literally 100 images 
+- When the data included 50x50 imgages --> The images that were resized (those smaller than 50 in the original dataset) are really bad but the others are better
+    - May have to rething the resizing of the images
