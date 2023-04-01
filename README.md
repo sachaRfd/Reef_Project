@@ -11,10 +11,11 @@
     - For now it is each image in one file --> LATER WILL have to group them together --> but this led to errors when I tried
 
 ## Basic Notebooks:
-Simple implementations of the models 
-    - Pytorch notebook: just an implementation of an autoencoder --> Just to see if it worked
-    - MNIST notebook: double checking model works with the given dataset --> also used to understand how to run code
-    - Basic Reef Notebook: Implementation of the model with our reef data
+Simple implementations of the models:
+
+   - Pytorch notebook: just an implementation of an autoencoder --> Just to see if it worked
+   - MNIST notebook: double checking model works with the given dataset --> also used to understand how to run code
+   - Basic Reef Notebook: Implementation of the model with our reef data
     
 ### Basic Reef notebook:
 - Worked fine on small reefs of size 26x26, 50x50 and 75x75--> but size of the dataset was still significantly small
