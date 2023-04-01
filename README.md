@@ -16,6 +16,5 @@
     - Check the PYTORCH Notebooks for notes and next steps
     
 ### Basic Reef notebook:
-- Worked fine on small reefs of size 26x26  --> but size of the dataset was literally 100 images 
-- When the data included 50x50 imgages --> The images that were resized (those smaller than 50 in the original dataset) are really bad but the others are better
-    - May have to rething the resizing of the images
+- Worked fine on small reefs of size 26x26, 50x50 and 75x75--> but size of the dataset was still significantly small
+- Model works when each reef is padded instead of just resized.
