@@ -26,6 +26,11 @@ class small_reef_dataset(Dataset):
 
     For Now I am testing it with the Mini Dataset --> which contains around 150 images  # noqa
 
+
+    Now Includes Min-Max Normalisation
+
+
+
     Comments:
     1. The dataset is a list of all the files in the directory
     2. The max_shape is the maximum shape of all the images in the dataset
@@ -35,7 +40,7 @@ class small_reef_dataset(Dataset):
 
     """
 
-    def __init__(self, directory, transform=torch.Tensor):
+    def __init__(self, directory, max_shape,  transform=torch.Tensor):
         """
         Initialize the dataset
 
@@ -46,17 +51,19 @@ class small_reef_dataset(Dataset):
         """
         self.directory = directory
         self.files = []
-        self.max_shape = [300, 300]
+        self.max_shape = [max_shape, max_shape]
         for f in os.listdir(directory):
             if f.endswith('.tif') or f.endswith('.tiff'):
                 path = os.path.join(directory, f)
                 data = tifffile.imread(path)
                 shape = data.shape[:2]
-                if shape[0] <= 300 and shape[1] <= 300:
+                if shape[0] <= self.max_shape[0] and shape[1] <= self.max_shape[1]:  # noqa
                     self.files.append(path)
-                else:
-                    self.max_shape[0] = min(self.max_shape[0], shape[0])
-                    self.max_shape[1] = min(self.max_shape[1], shape[1])
+
+                # Loop to reshape to biggest Image
+                # else:
+                #     self.max_shape[0] = min(self.max_shape[0], shape[0])
+                #     self.max_shape[1] = min(self.max_shape[1], shape[1])
         self.transform = transform
 
     def __len__(self):
@@ -66,17 +73,49 @@ class small_reef_dataset(Dataset):
         path = self.files[index]
         data = tifffile.imread(path)
 
-        if data.shape[0] < 300 or data.shape[1] < 300:
-            data = cv2.resize(data, (self.max_shape[1], self.max_shape[0]))
+        if data.shape[0] < self.max_shape[0] or data.shape[1] < self.max_shape[1]:  # noqa
+            print("Original Shape: ", data.shape)
 
-        if data.shape[0] > 300 or data.shape[1] > 300:
+            print(path)
+            # Min Max Normalise the data:
+            data = (data - np.min(data)) / ((np.max(data) - np.min(data)+1e-8))
+
+            # Resize the image to 50 by 50 using CV2
+            # data = cv2.resize(data, (self.max_shape[0], self.max_shape[1]))
+
+            # Pad the image with zeros instead of resizing:
+            # data = cv2.copyMakeBorder(data.copy(),
+            #                           int((self.max_shape[0] -
+            #                               data.shape[0]) // 2),
+            #                           int((self.max_shape[0] -
+            #                               data.shape[0]) // 2),
+            #                           int((self.max_shape[1] -
+            #                               data.shape[1]) // 2),
+            #                           int((self.max_shape[1] -
+            #                               data.shape[1]) // 2),
+            #                           cv2.BORDER_CONSTANT, value=0)  # noqa
+            # print("New Shape: ", data.shape)
+
+            # Calculate the amount of padding needed on each side
+            pad_top = (self.max_shape[0] - data.shape[0]) // 2
+            pad_bottom = self.max_shape[0] - data.shape[0] - pad_top
+            pad_left = (self.max_shape[1] - data.shape[1]) // 2
+            pad_right = self.max_shape[1] - data.shape[1] - pad_left
+
+            # Pad the image using copyMakeBorder()
+            data = cv2.copyMakeBorder(data.copy(),
+                                      pad_top, pad_bottom,
+                                      pad_left, pad_right,
+                                      cv2.BORDER_CONSTANT, value=0)
+
+            # Print the new shape
+            print("New Shape: ", data.shape)
+
+        if data.shape[0] > self.max_shape[0] or data.shape[1] > self.max_shape[1]:  # noqa
             return None
 
         # convert the array of Uint8 to Float64 so transformation can be applied  # noqa
         data = data.astype(float)
-
-        # Resize the image to 300 by 300 using CV2
-        data = cv2.resize(data, (300, 300))
 
         # Transform the image:
         if self.transform:
@@ -84,19 +123,20 @@ class small_reef_dataset(Dataset):
 
         # Return the mean of the 3 bands
         data_mean = (data[..., 0] + data[..., 1] + data[..., 2]) / 3
+
         return data_mean
 
 
 if __name__ == "__main__":
     transform = torch.tensor
-    data = small_reef_dataset("Clipped_Reefs/all/", transform=transform)
+    data = small_reef_dataset("Clipped_Reefs/clean/", 75, transform=transform)
 
-    band_average = data[0]
+    band_average = data[5]
     print("Band average:", band_average)
     print(band_average.shape)
 
     # # Tensors to numpy arrays
-    # band_average_np = band_average.numpy().astype(np.float32)
+    band_average_np = band_average.numpy().astype(np.float32)
 
     # # Visualise the image:
     # with rasterio.open("test_Average.tiff", "w", width=band_average_np.shape[1],  # noqa
@@ -111,21 +151,6 @@ if __name__ == "__main__":
     for i in range(data.__len__()):
         band_average = data[i]
         band_average_np = band_average.numpy().astype(np.float32)
-        np.save(f"Reef_data_numpy/small_reefs/Reef_{i}", band_average_np)
+        np.save(f"Reef_data_numpy/75_pix_reefs_PADDED/Reef_{i}", band_average_np)  # noqa
         print("Done with Reef_{}".format(i))
     print("Loaded NPY file")
-
-    # for i in range(10):
-    #     band_average = data[i]
-    #     band_average_np = band_average.numpy().astype(np.uint8)
-    #     np.save("Reef_data_numpy/Reef_{}".format(i), band_average_np)
-    #     print("Done with Reef_{}".format(i))
-
-    # for i in range(10):
-    #     band_average = data[i]
-    #     band_average_np = band_average.numpy().astype(np.float32)
-    #     np.save("Reef_data_numpy/Reef_{}".format(i), band_average_np)
-    #     print("Done with Reef_{}".format(i))
-
-    # test = np.load("Reef_data_numpy/Reef_0.npy")
-    # print(test)
