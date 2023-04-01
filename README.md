@@ -7,8 +7,11 @@
     - This function has some bugs, Not sure how to fix yet --> Happens when the reefs are very small I think --> More work to be done.
 
 - Small Reef dataset --> uses smaller chunks of data to test initial model and to see where to improve on
-    - Downloads each image as numpy array and saves it locally as npy file 
-    - For now it is each image in one file --> LATER WILL have to group them together --> but this led to errors when I tried
+    - Downloads each image as numpy array depending on an image_shape parameter
+    - Resizes the smaller images to a the image_shape parameter and ignores the larger images
+    - Min-Max normalises the images
+    - Saves each image-array locally as npy file 
+        - For now it is each image in one file --> LATER WILL have to group them together --> but this led to errors when I tried
 
 ## Basic Notebooks:
 Simple implementations of the models:
