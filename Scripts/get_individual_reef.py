@@ -1,7 +1,10 @@
 import geopandas as gpd
+import sys
 import rasterio
 from rasterio.mask import mask
 from shapely.geometry import box
+import numpy as np
+import traceback
 
 
 class read_reefs:
@@ -24,12 +27,18 @@ class read_reefs:
         """
         # Reads the RGB image
         with rasterio.open(self.file_location) as src:
+
             # Get the bounding box of the tiff file
             # is equivalent to: box(src.bounds[0], src.bounds[1], src.bounds[2], src.bounds[3])  # noqa
             tiff_extent = box(*src.bounds)
 
             # Reproject to match CRS
             gdf_reprojected = self.gdf.to_crs(src.crs)
+            # Remove polygons with INF or NaN values
+            gdf_reprojected = gdf_reprojected[~np.isinf(gdf_reprojected.geometry.bounds).any(axis=1)]
+            gdf_reprojected = gdf_reprojected[~np.isnan(gdf_reprojected.geometry.bounds).any(axis=1)]
+
+
 
             # New GeoDataFrame with the bounding box as a Polygon geometry
             print("Creating GeoDataframe ...")
@@ -41,6 +50,7 @@ class read_reefs:
             selected_reefs = gdf_reprojected[gdf_reprojected.intersects(
                 bbox_gdf.unary_union)]
             print(f"There are {selected_reefs.shape[0]} reefs in this image !")
+            print(selected_reefs.head(5))
 
             # Clip the tiff file if not empty:
             clipped = None
@@ -50,9 +60,13 @@ class read_reefs:
             else:
                 # Convert to CRS of the tiff file
                 selected_reefs = selected_reefs.to_crs(src.crs)
+                # print("SRC: CRS = ", src.crs)
+                # print("Reef_list ", selected_reefs.crs)
 
-                # Get the geometry as shapely polygons
-                reef_geoms = selected_reefs.geometry.tolist()
+                # # Get the geometry as shapely polygons
+                # reef_geoms = selected_reefs.geometry.tolist()
+                # Get the geometry as shapely polygons, removing any NaN values
+                reef_geoms = [geom for geom in selected_reefs.geometry.tolist() if not geom.is_empty]
 
                 for count, reef in enumerate(reef_geoms):
                     # Has to be iterable list to be masked
@@ -77,8 +91,16 @@ class read_reefs:
 
 
 if __name__ == "__main__":
-    input_path = "Reef_13/RGB.tiff"
-    output_path = "Clipped_Reefs/all/"
-    reef_number = 13
+    if len(sys.argv) != 4:
+        print("Usage: python script.py <path/of/image> <path_directory> <Image Number>")
+        sys.exit(1)
+    
+    # Get the inputs: 
+    input_path, output_path, reef_number = str(sys.argv[1]), str(sys.argv[2]), str(sys.argv[3])
+    
+    # have to change both the path and the reef Number
+    # input_path = "Reef_11/RGB.tiff"
+    # output_path = "Clipped_Reefs/clean/"
+    # reef_number = 11
     setup = read_reefs(input_path, output_path, reef_number)
     setup.read_each_reef()
