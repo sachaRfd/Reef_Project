@@ -4,7 +4,7 @@
 - Create_Images: Takes filepath to the Sentinel Image data as input then creates images with different bands.
 - Download_Files: Takes coordinates as input and downloads data, if available.
 - Get_Individual_Reef: Takes path to RGB image and creates images of all the reefs present in that image.
-    - This function has some bugs, Not sure how to fix yet --> Happens when the reefs are very small I think --> More work to be done.
+    - Bugs fixed --> works fine now.
 
 - Small Reef dataset --> uses smaller chunks of data to test initial model and to see where to improve on
     - Downloads each image as numpy array depending on an image_shape parameter
