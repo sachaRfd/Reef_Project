@@ -4,7 +4,6 @@ import rasterio
 from rasterio.mask import mask
 from shapely.geometry import box
 import numpy as np
-import traceback
 
 
 class read_reefs:
@@ -35,10 +34,10 @@ class read_reefs:
             # Reproject to match CRS
             gdf_reprojected = self.gdf.to_crs(src.crs)
             # Remove polygons with INF or NaN values
-            gdf_reprojected = gdf_reprojected[~np.isinf(gdf_reprojected.geometry.bounds).any(axis=1)]
-            gdf_reprojected = gdf_reprojected[~np.isnan(gdf_reprojected.geometry.bounds).any(axis=1)]
-
-
+            gdf_reprojected = gdf_reprojected[~np.isinf(
+                gdf_reprojected.geometry.bounds).any(axis=1)]
+            gdf_reprojected = gdf_reprojected[~np.isnan(
+                gdf_reprojected.geometry.bounds).any(axis=1)]
 
             # New GeoDataFrame with the bounding box as a Polygon geometry
             print("Creating GeoDataframe ...")
@@ -66,7 +65,8 @@ class read_reefs:
                 # # Get the geometry as shapely polygons
                 # reef_geoms = selected_reefs.geometry.tolist()
                 # Get the geometry as shapely polygons, removing any NaN values
-                reef_geoms = [geom for geom in selected_reefs.geometry.tolist() if not geom.is_empty]
+                reef_geoms = [
+                    geom for geom in selected_reefs.geometry.tolist() if not geom.is_empty]  # noqa
 
                 for count, reef in enumerate(reef_geoms):
                     # Has to be iterable list to be masked
@@ -92,12 +92,13 @@ class read_reefs:
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
-        print("Usage: python script.py <path/of/image> <path_directory> <Image Number>")
+        print("Usage: python script.py <path/of/image> <path_directory> <Image Number>")  # noqa
         sys.exit(1)
-    
-    # Get the inputs: 
-    input_path, output_path, reef_number = str(sys.argv[1]), str(sys.argv[2]), str(sys.argv[3])
-    
+
+    # Get the inputs:
+    input_path, output_path, reef_number = str(
+        sys.argv[1]), str(sys.argv[2]), str(sys.argv[3])
+
     # have to change both the path and the reef Number
     # input_path = "Reef_11/RGB.tiff"
     # output_path = "Clipped_Reefs/clean/"
