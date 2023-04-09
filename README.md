@@ -1,5 +1,12 @@
 # Reef_Generator Project
 
+## Project Description:
+- Read TIFF satelite images
+- Create Robust Auto-encoder styleo model for reef generation
+    - Should be able to split image into a low rank L matrix and a sparse S matrix that denoises the image and potentially removes Outliers 
+
+
+
 ## Scripts:
 - Create_Images: Takes filepath to the Sentinel Image data as input then creates images with different bands.
 - Download_Files: Takes coordinates as input and downloads data, if available.
