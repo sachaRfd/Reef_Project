@@ -2,8 +2,10 @@
 
 ## Project Description:
 - Read TIFF satelite images
-- Create Robust Auto-encoder styleo model for reef generation
-    - Should be able to split image into a low rank L matrix and a sparse S matrix that denoises the image and potentially removes Outliers 
+- Create Robust Auto-encoder style model for reef generation
+    - Should be able to split image into a low rank L matrix and a sparse S matrix that denoises the image and potentially removes Outliers
+    - The noise we are looking to remove is induced by atmospheric variety, and different lighting conditions between the images. 
+    - We are looking to only use "clean" images for the models, meaning there is no induced noise to the images before training. 
 
 
 
