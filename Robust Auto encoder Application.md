@@ -1,3 +1,13 @@
+# Reef_Generator Project
+
+## Project Description:
+- Read TIFF satelite images
+- Create Robust Auto-encoder style model for reef generation
+    - Should be able to split image into a low rank L matrix and a sparse S matrix that denoises the image, removing outliers.
+    - The noise we are looking to remove is waves, and noise induced by atmospheric variety, and different lighting conditions between the images. 
+    - We are looking to only use "clean" images for the models, meaning there is no induced noise to the images before training.
+
+
 # Current Progress on Project: 
 
 ## Script Usage: 
@@ -54,11 +64,11 @@
 
 - The models were adapted from the following paper: Anomaly Detection with Robust Deep Autoencoders (https://www.eecs.yorku.ca/course_archive/2017-18/F/6412/reading/kdd17p665.pdf)
     
-    - The main change to the models were code for plotting intermediate results, as well as adding dropout layers for better generalisation of the model. 
+    - The main Code changes were for plotting  intermediate results, as well as adding dropout layers for better generalisation of the model.
+    - I want to look into implementing a CNN instead of the simple Fully linear network, as well as implement different models for each image band, instead of the one which is trained on the mean of the bands. 
 
-- L-1 Robust Auto-encoder Model: 
-
-- L-2,1 Robust Auto-encoder Model: 
+- L-2,1 Robust Auto-encoder Model: Model is trained with outer iterations (splitting the model output into L and S matrices) and inner iterations (Auto-encoder training iterations), and varying lambda values, which dictates how sparse the S matrix should be. 
+    - Finding the best Lambda values for our problem is for future optimisation work. 
 
 
 ## Training
@@ -611,23 +621,10 @@
 
 ### Observations:
 
-    - Short Iteration Training: 
-        - Lambda 100: 
-        - Lambda 10: 
-        - Lambda 5:
-        - Lambda 1: 
-        - Lambda 0.5:
-        - Lambda 0.1:
-        - Lambda 0.05:
+For initial visualisation of our model, outputs: 
 
-
-    - Long Iteration Training:
-        - Lambda 1: 
-        - Lambda 0.5:
-        - Lambda 0.1:
-        - Lambda 0.05:
-        - Lambda 0.01:
-
+    - Short Iteration Training showed interesting results:
+    
 
 
 
