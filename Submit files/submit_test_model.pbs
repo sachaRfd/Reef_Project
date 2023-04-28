@@ -1,8 +1,0 @@
-#PBS -l walltime=00:30:00
-#PBS -l select=1:ncpus=8:mem=16gb
-
-module load anaconda3/personal
-source activate reef
-
-cd $PBS_O_WORKDIR
-python run_RAE.py Model_Checkpoints/training_1/ 75 Model_Output/test_1/
